@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Are you replacing real connection with an AI? | True Contact</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#17120f; --ink-soft:#241d18; --paper:#f6f1e8; --paper-2:#efe7da;
+    --text:#2c2521; --text-soft:#6a5d52; --ember:#c2603a; --ember-deep:#9c4427;
+    --sage:#4f6b5d; --gold:#b0883f; --line:#ddd2c2; --line-dark:#3a302a;
+    --shadow:0 1px 2px rgba(23,18,15,.05),0 10px 30px rgba(23,18,15,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--paper);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+  h1,h2,h3{font-family:'Fraunces',Georgia,serif;font-weight:600;line-height:1.13;letter-spacing:-.01em;color:var(--ink)}
+  .topbar{border-bottom:1px solid var(--line);background:rgba(246,241,232,.9);backdrop-filter:blur(8px)}
+  .topbar .in{max-width:680px;margin:0 auto;padding:14px 24px;font-family:'Fraunces',serif;font-weight:600;font-size:15px}
+  .topbar b{color:var(--ember)}
+  .stage{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px}
+  .panel{width:100%;max-width:680px;background:var(--paper);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:clamp(28px,5vw,52px)}
+
+  /* intro */
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--ember-deep);margin-bottom:16px}
+  .intro h1{font-size:clamp(28px,5vw,40px);max-width:16ch}
+  .intro p{margin-top:18px;font-size:16.5px;color:var(--text-soft)}
+  .reassure{margin-top:22px;display:flex;flex-wrap:wrap;gap:10px}
+  .chip{font-size:13px;font-weight:600;color:var(--sage);background:rgba(79,107,93,.12);border-radius:999px;padding:7px 14px}
+  .btn{appearance:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;font-size:16px;color:#fff;background:var(--ember);padding:15px 30px;border-radius:12px;transition:.15s;box-shadow:0 6px 18px rgba(194,96,58,.28)}
+  .btn:hover{background:var(--ember-deep);transform:translateY(-1px)}
+  .btn.secondary{background:transparent;color:var(--ember-deep);box-shadow:none;padding:14px 0}
+  .start-row{margin-top:30px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .start-row small{color:var(--text-soft);font-size:13px}
+
+  /* progress */
+  .prog{display:flex;align-items:center;gap:14px;margin-bottom:30px}
+  .prog .bar{flex:1;height:8px;background:var(--paper-2);border:1px solid var(--line);border-radius:999px;overflow:hidden}
+  .prog .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--ember),var(--ember-deep));transition:width .3s ease;border-radius:999px}
+  .prog .count{font-size:13px;font-weight:600;color:var(--text-soft);white-space:nowrap}
+
+  /* question */
+  .qnum{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ember-deep);margin-bottom:10px}
+  .qtext{font-family:'Fraunces',serif;font-size:clamp(21px,3.4vw,28px);font-weight:600;color:var(--ink);line-height:1.25}
+  .qhint{margin-top:10px;font-size:14px;color:var(--text-soft)}
+  .opts{margin-top:26px;display:grid;gap:11px}
+  .opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;cursor:pointer;background:var(--paper);border:1.5px solid var(--line);border-radius:13px;padding:16px 18px;font-size:15.5px;color:var(--text);transition:.13s;font-family:inherit}
+  .opt:hover{border-color:var(--ember);background:#fbf7f0}
+  .opt .dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);flex:none;transition:.13s}
+  .opt:hover .dot{border-color:var(--ember)}
+  .opt.sel{border-color:var(--ember);background:#fbf2ec}
+  .opt.sel .dot{border-color:var(--ember);background:var(--ember);box-shadow:inset 0 0 0 3px #fbf2ec}
+  .nav-row{margin-top:26px;display:flex;justify-content:space-between;align-items:center}
+  .back{background:none;border:none;color:var(--text-soft);cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;padding:8px 0}
+  .back:hover{color:var(--ink)}
+  .back[disabled]{opacity:.3;cursor:default}
+
+  /* result */
+  .result .band{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:6px 14px;border-radius:999px;margin-bottom:18px}
+  .band.light{background:rgba(79,107,93,.14);color:var(--sage)}
+  .band.mid{background:rgba(176,136,63,.16);color:var(--gold)}
+  .band.heavy{background:rgba(156,68,39,.13);color:var(--ember-deep)}
+  .result h2{font-size:clamp(24px,4vw,32px);max-width:20ch}
+  .scoreline{margin-top:14px;font-size:14px;color:var(--text-soft)}
+  .result .body{margin-top:22px;font-size:16px;color:var(--text)}
+  .result .body p{margin-top:14px}
+  .flagbox{margin-top:24px;background:var(--paper-2);border-radius:14px;padding:20px 22px}
+  .flagbox h3{font-size:15px;margin-bottom:12px}
+  .flagbox ul{list-style:none}
+  .flagbox li{position:relative;padding-left:24px;margin-bottom:9px;font-size:14.5px;color:var(--text)}
+  .flagbox li:before{content:"";position:absolute;left:2px;top:8px;width:8px;height:8px;border-radius:2px;background:var(--ember);transform:rotate(45deg)}
+  .flagbox li.none:before{background:var(--sage)}
+  .move{margin-top:24px;border-left:3px solid var(--sage);background:rgba(79,107,93,.07);border-radius:0 12px 12px 0;padding:18px 22px}
+  .move .lab{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sage);margin-bottom:6px}
+  .move p{font-size:15.5px;color:var(--text)}
+  .bridge{margin-top:26px;font-family:'Fraunces',serif;font-style:italic;font-size:18px;color:var(--ink)}
+
+  /* capture */
+  .capture{margin-top:30px;background:var(--ink);border-radius:16px;padding:28px 26px;color:var(--paper)}
+  .capture h3{color:var(--paper);font-size:20px}
+  .capture p{margin-top:8px;color:#bdae9e;font-size:14.5px}
+  .form{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .form input,.form select{min-width:0;width:100%;padding:14px 16px;border-radius:11px;border:1px solid var(--line-dark);background:var(--ink-soft);color:var(--paper);font-size:15px;font-family:inherit}
+  .form select{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%237a6c5e' stroke-width='2' fill='none'/></svg>");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+  .form select:invalid{color:#7a6c5e}
+  .form select option{color:var(--ink)}
+  .form input::placeholder{color:#7a6c5e}
+  .form input:focus,.form select:focus{outline:none;border-color:var(--ember)}
+  .form button{grid-column:1 / -1;appearance:none;border:none;cursor:pointer;font-family:inherit;font-weight:600;font-size:15px;color:#fff;background:var(--ember);padding:14px 22px;border-radius:11px}
+  .form button:hover{background:var(--ember-deep)}
+  @media (max-width:520px){.form{grid-template-columns:1fr}}
+  .capture small{display:block;margin-top:12px;color:#7a6c5e;font-size:12.5px}
+  .confirm{margin-top:16px;font-size:15px;color:#bcd6c7;display:none}
+  .crisis{margin-top:26px;font-size:13px;color:var(--text-soft);text-align:center}
+  .restart{margin-top:18px;text-align:center}
+  .hidden{display:none}
+  @media (max-width:520px){.panel{border-radius:16px}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="in">True <b>Contact</b></div></div>
+
+<div class="stage">
+  <div class="panel">
+
+    <!-- INTRO -->
+    <section id="intro" class="intro">
+      <div class="eyebrow">A 2-minute self-check</div>
+      <h1>Are you replacing real connection with an AI?</h1>
+      <p>Seven honest questions. No one's grading you, and there's no trick where the answer is always "you have a problem." If the app is doing a job for you, this just helps you see which one, so you can decide what you want to do about it.</p>
+      <div class="reassure">
+        <span class="chip">7 questions</span>
+        <span class="chip">No email to see your score</span>
+        <span class="chip">No shame</span>
+      </div>
+      <div class="start-row">
+        <button class="btn" onclick="start()">Start the check</button>
+        <small>Built for men who already sense something's off and want a straight read.</small>
+      </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section id="quiz" class="hidden">
+      <div class="prog">
+        <div class="bar"><i id="progfill" style="width:0%"></i></div>
+        <span class="count" id="progcount">1 / 8</span>
+      </div>
+      <div class="qnum" id="qnum">Question 1</div>
+      <div class="qtext" id="qtext"></div>
+      <div class="qhint" id="qhint"></div>
+      <div class="opts" id="opts"></div>
+      <div class="nav-row">
+        <button class="back" id="backbtn" onclick="back()">← Back</button>
+        <span></span>
+      </div>
+    </section>
+
+    <!-- RESULT -->
+    <section id="result" class="result hidden">
+      <span class="band" id="band"></span>
+      <h2 id="rhead"></h2>
+      <div class="scoreline" id="scoreline"></div>
+      <div class="body" id="rbody"></div>
+      <div class="flagbox">
+        <h3>What's showing up for you</h3>
+        <ul id="flags"></ul>
+      </div>
+      <div class="move">
+        <div class="lab">Your first move</div>
+        <p id="movetext"></p>
+      </div>
+      <div class="bridge" id="bridge"></div>
+
+      <div class="capture">
+        <h3>The 7-Day Unplug</h3>
+        <p>One short email a day. Not a lecture, not a guilt trip. Just the first real steps off it, and toward people. Free.</p>
+        <form class="form" id="leadform" onsubmit="return submitLead(event)">
+          <input type="text" id="firstname" placeholder="first name" required>
+          <input type="email" id="email" placeholder="your email" required>
+          <select id="age" required>
+            <option value="" disabled selected>your age</option>
+            <option>Under 30</option>
+            <option>30-39</option>
+            <option>40-49</option>
+            <option>50-59</option>
+            <option>60+</option>
+          </select>
+          <select id="sex" required>
+            <option value="" disabled selected>you are a...</option>
+            <option value="man">Man</option>
+            <option value="woman">Woman</option>
+            <option value="other">Other</option>
+            <option value="na">Rather not say</option>
+          </select>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+          <button type="submit">Send me Day 1</button>
+        </form>
+        <div class="confirm" id="confirm">You're in. Day 1 is on its way. Check your inbox.</div>
+        <small>No spam. Leave any time.</small>
+      </div>
+
+      <div class="crisis">If you're in real distress, text <b>HOME to 741741</b> (US Crisis Text Line). This is worth talking to a person about.</div>
+      <div class="restart"><button class="btn secondary" onclick="restart()">Retake the check</button></div>
+    </section>
+
+  </div>
+</div>
+
+<script>
+  // 7 scored questions (0-3). Reframed in our voice: no shame, no "real women"/performance framing.
+  const QUESTIONS = [
+    { q:"When you've got a free moment, you open the app before you'd reach out to a real person.",
+      hint:"Be honest about the default, not the exception.",
+      flag:"It's becoming your first reach, not your last resort." },
+    { q:"You've told it things you haven't said out loud to anyone real.",
+      hint:"Fears, wants, the stuff that's hard to say.",
+      flag:"Your most honest conversations are happening where there's nothing at stake." },
+    { q:"Next to it, real people have started to feel like hard work.",
+      hint:"Their moods, their timing, their needs.",
+      flag:"Real people are starting to feel like the downgrade. That's the conditioning, not them." },
+    { q:"You're putting in more time or money than you'd want to admit.",
+      hint:"Hours that disappear, subscriptions you don't mention.",
+      flag:"The spend (time or money) is past what you'd say out loud." },
+    { q:"When something's bothering you, you go to it instead of dealing with the real thing.",
+      hint:"It's where you take the stress, not where you fix it.",
+      flag:"It's become the pressure valve, so the real problem keeps sitting there." },
+    { q:"You'd be uncomfortable if someone you trust saw your chats.",
+      hint:"Not because it's private. Because it's hidden.",
+      flag:"You're keeping it secret, and the secrecy is doing its own damage." },
+    { q:"Reaching out to real people feels harder than it used to.",
+      hint:"Texting first, making plans, sitting in a slow conversation.",
+      flag:"The real-world muscle is getting weaker from lack of use." },
+  ];
+  const SCALE = [
+    { t:"Never", v:0 },
+    { t:"Once in a while", v:1 },
+    { t:"Pretty often", v:2 },
+    { t:"That's me", v:3 },
+  ];
+  // Subtype diagnostic (not scored)
+  const SUBQ = {
+    q:"Last one: what does it mostly give you?",
+    hint:"This decides your first move, so pick the closest.",
+    opts:[
+      { t:"Company: feeling close to someone, being known", k:"substitute" },
+      { t:"Escape: a break from my head, a fantasy, killing time", k:"escape" },
+      { t:"Honestly, both", k:"both" },
+    ]
+  };
+
+  let answers = new Array(QUESTIONS.length).fill(null);
+  let subtype = null;
+  let idx = 0; // 0..6 scored, 7 = subtype
+  const TOTAL = QUESTIONS.length + 1;
+
+  const $ = id => document.getElementById(id);
+  function show(id){ ["intro","quiz","result"].forEach(s=>$(s).classList.add("hidden")); $(id).classList.remove("hidden"); window.scrollTo(0,0); }
+
+  function start(){ idx=0; answers=new Array(QUESTIONS.length).fill(null); subtype=null; show("quiz"); render(); }
+  function restart(){ $("confirm").style.display="none"; $("leadform").reset(); start(); }
+
+  function render(){
+    $("progfill").style.width = ((idx)/(TOTAL-1)*100)+"%";
+    $("progcount").textContent = (idx+1)+" / "+TOTAL;
+    $("backbtn").disabled = idx===0;
+    if(idx < QUESTIONS.length){
+      const Q = QUESTIONS[idx];
+      $("qnum").textContent = "Question "+(idx+1);
+      $("qtext").textContent = Q.q;
+      $("qhint").textContent = Q.hint;
+      $("opts").innerHTML = SCALE.map((o,i)=>
+        `<button class="opt${answers[idx]===i?' sel':''}" onclick="pick(${i})"><span class="dot"></span>${o.t}</button>`).join("");
+    } else {
+      $("qnum").textContent = "Last question";
+      $("qtext").textContent = SUBQ.q;
+      $("qhint").textContent = SUBQ.hint;
+      $("opts").innerHTML = SUBQ.opts.map((o,i)=>
+        `<button class="opt${subtype===o.k?' sel':''}" onclick="pickSub('${o.k}')"><span class="dot"></span>${o.t}</button>`).join("");
+    }
+  }
+  function pick(i){
+    answers[idx]=i;
+    render();
+    setTimeout(()=>{ if(idx<QUESTIONS.length-1){ idx++; render(); } else { idx++; render(); } }, 180);
+  }
+  function pickSub(k){ subtype=k; setTimeout(showResult,180); }
+  function back(){ if(idx>0){ idx--; render(); } }
+
+  function showResult(){
+    const score = answers.reduce((a,b)=>a+(b||0),0); // 0..21
+    let band, bclass, head, body;
+    if(score<=6){
+      band="Light"; bclass="light";
+      head="It's a tool you're using, not a tap you can't shut off.";
+      body=`<p>At this level the app isn't running your life. Good. Still worth knowing what it's doing for you, because the pull gets stronger quietly, and the early habit is the easiest one to redirect.</p>
+            <p>Here is the frame that helps. A little support isn't the problem. Think of it as a prosthetic: it held weight when you needed it, fine for getting around. The watch-point is whether you start standing on it instead of building the real thing.</p>`;
+    } else if(score<=13){
+      band="It's doing a real job"; bclass="mid";
+      head="It's filling a real job for you. Worth naming which one.";
+      body=`<p>You're past casual. The app is meeting something real: company, calm, a place with no risk of rejection. That need is legitimate, and the relief was real. Calling it pathetic would just be wrong, and it wouldn't help.</p>
+            <p>The useful frame is prosthetic, not fake: it held weight when you couldn't. The work now is giving that weight back to real life, slowly, so the app stops being the only thing that carries it.</p>`;
+    } else {
+      band="It's become the main place you go"; bclass="heavy";
+      head="It's become the main place you go. That makes sense, and there's a way back.";
+      body=`<p>At this level the app is doing a lot of the work a real relationship would. This is a job it's filling, not a flaw in you. And these apps are built by teams whose pay depends on you not leaving, so willpower alone was always the wrong tool.</p>
+            <p>The way out isn't deleting it and white-knuckling the gap. Deleting cuts the supply without filling the job, which is why people reinstall within a week. The exit that holds is replacing the job: real human contact added back in small, safe doses, until the app is just redundant.</p>`;
+    }
+
+    $("band").textContent = band; $("band").className = "band "+bclass;
+    $("rhead").textContent = head;
+    $("scoreline").textContent = "Your score: "+score+" / 21 across the 7 signs.";
+    $("rbody").innerHTML = body;
+
+    // flagged signs (answered 2 or 3)
+    const flagged = QUESTIONS.map((Q,i)=>({f:Q.flag,v:answers[i]})).filter(x=>x.v>=2);
+    const ul = $("flags");
+    if(flagged.length===0){
+      ul.innerHTML = `<li class="none">Nothing's flagging hard right now. Keep an eye on the first reach and the secrecy. Those move first.</li>`;
+    } else {
+      ul.innerHTML = flagged.map(x=>`<li>${x.f}</li>`).join("");
+    }
+
+    // subtype move
+    let move;
+    if(subtype==="escape"){
+      move="You're mostly using it to get out of your own head. So willpower won't cut it. You need another real outlet that does the same job. Pick one absorbing thing this week (a body practice, a project, something with your hands) and put twenty minutes on it the next time you'd open the app.";
+    } else if(subtype==="substitute"){
+      move="You're mostly using it for closeness. So the replacement has to be human, and small enough that your system can handle it: send one real message to one real person today. Not a deep talk. Just contact. Then do it again tomorrow. That's the muscle.";
+    } else {
+      move="It's doing two jobs, company and escape, so you'll replace it on two fronts: one small piece of real human contact today (a single text to one person), and one real outlet for your head this week. Start with whichever feels more survivable.";
+    }
+    // looks/status floor: light, honest, only on mid/heavy
+    if(score>6){
+      move += " And if part of this is that real dating feels out of reach, your age or your looks, that floor is real and we won't pretend otherwise. It's also not the whole game. The things that actually move a room, being settled, being present, are the ones the app can't build for you.";
+    }
+    $("movetext").textContent = move;
+
+    $("bridge").textContent = "You got off the substitute. Now you learn the thing it was standing in for.";
+
+    show("result");
+  }
+
+  function submitLead(e){
+    e.preventDefault();
+    const score = answers.reduce((a,b)=>a+(b||0),0);          // 0..21
+    const band = score<=6 ? "light" : (score<=13 ? "mid" : "heavy");
+    const lead = {
+      first_name: $("firstname").value.trim(),
+      email: $("email").value.trim(),
+      age_bracket: $("age").value,        // e.g. "40-49"
+      sex: $("sex").value,                // man | woman | other | na
+      type: subtype,                      // substitute | escape | both
+      score: score,                       // 0..21
+      band: band,                         // light | mid | heavy
+      website: $("website").value         // honeypot: real users leave this empty
+    };
+
+    // Posts to the Cloudflare Worker (see unplug_worker/), which holds the MailerLite
+    // token and creates the subscriber server-side. Paste your deployed Worker URL here:
+    const WORKER_URL = "https://unplug-lead.truecontact.workers.dev";
+
+    const btn = $("leadform").querySelector("button");
+    btn.disabled = true; btn.textContent = "Sending...";
+
+    fetch(WORKER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(lead)
+    })
+    .then(r => { if(!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+    .then(() => {
+      $("confirm").style.color = "#bcd6c7";
+      $("confirm").textContent = "You're in" + (lead.first_name ? ", " + lead.first_name : "") + ". Day 1 is on its way. Check your inbox.";
+      $("leadform").style.display = "none";
+      $("confirm").style.display = "block";
+    })
+    .catch(err => {
+      console.error(err);
+      btn.disabled = false; btn.textContent = "Send me Day 1";
+      $("confirm").style.color = "#e8b4a0";
+      $("confirm").textContent = "That didn't go through. Give it another try in a moment.";
+      $("confirm").style.display = "block";
+    });
+    return false;
+  }
+</script>
+</body>
+</html>
