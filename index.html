@@ -266,6 +266,10 @@
             </div>
           </div>
           <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+          <label class="consent" for="consent" style="grid-column:1 / -1; display:flex; align-items:flex-start; gap:.55em; font-size:.82rem; line-height:1.45; cursor:pointer; color:inherit; opacity:.92; margin:.2em 0 .1em">
+            <input type="checkbox" id="consent" required style="margin-top:.18em; flex:0 0 auto; width:16px; height:16px; accent-color:#8FC7CB; cursor:pointer">
+            <span>Yes, email me the 7-Day Unplug &mdash; one short email a day. Unsubscribe any time.</span>
+          </label>
           <button type="submit">Send me Day 1</button>
         </form>
             <div class="confirm" id="confirm">You're in. Day 1 is on its way. Check your inbox.</div>
@@ -529,6 +533,9 @@
 
   function submitLead(e){
     e.preventDefault();
+    // Explicit consent is required (native `required` on the checkbox gates submit;
+    // this is the JS fallback). We pass a timestamp as the record of consent.
+    if(!$("consent").checked){ return false; }
     const score = answers.reduce((a,b)=>a+(b||0),0);          // 0..21
     const band = score<=6 ? "light" : (score<=13 ? "mid" : "heavy");
     const lead = {
@@ -539,6 +546,8 @@
       type: subtype,                      // substitute | escape | both
       score: score,                       // 0..21
       band: band,                         // light | mid | heavy
+      consent: true,                      // checkbox ticked (gated above)
+      consent_at: new Date().toISOString(), // record of consent
       website: $("website").value         // honeypot: real users leave this empty
     };
 
