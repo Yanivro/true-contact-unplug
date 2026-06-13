@@ -106,6 +106,9 @@
   .flagbox li:before{content:"";position:absolute;left:2px;top:8px;width:8px;height:8px;border-radius:2px;background:var(--ember);transform:rotate(45deg)}
   .flagbox li.none:before{background:var(--sage)}
   .move p{font-size:15.5px;color:var(--text)}
+  .move-opts{margin:12px 0 4px;padding-left:20px;list-style:none}
+  .move-opts li{position:relative;font-size:15.5px;color:var(--text);line-height:1.45;margin:8px 0;padding-left:18px}
+  .move-opts li::before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:50%;background:var(--sage)}
 
   /* bridge inside capture */
   .bridge{font-family:'Fraunces',serif;font-style:italic;font-size:17px;color:var(--text-soft);margin-bottom:20px;line-height:1.4}
@@ -224,7 +227,14 @@
         <div class="reveal-block" id="rb-move">
           <div class="move">
             <div class="card-kicker">First move</div>
-            <p id="movetext"></p>
+            <p>Your first move is to dare to raise the stakes. An AI companion is all comfort. Getting out means getting comfortable with the uncomfortable. So do one small thing today:</p>
+            <ul class="move-opts">
+              <li>Reach out to a friend</li>
+              <li>Try a new social activity</li>
+              <li>Take a first step toward real connection</li>
+              <li>Or just write about how you're feeling</li>
+            </ul>
+            <p>Any of these is you choosing the discomfort on purpose. That's the first step out.</p>
           </div>
         </div>
         <div class="reveal-block" id="rb-capture">
@@ -446,30 +456,12 @@
       ul.innerHTML = flagged.map(x=>`<li>${x.f}</li>`).join("");
     }
 
-    // subtype move
-    let move;
-    if(subtype==="escape"){
-      move="You're mostly using it to get out of your own head. So willpower won't cut it. You need another real outlet that does the same job. Pick one absorbing thing this week (a body practice, a project, something with your hands) and put twenty minutes on it the next time you'd open the app.";
-    } else if(subtype==="substitute"){
-      move="You're mostly using it for closeness. So the replacement has to be human, and small enough that your system can handle it: send one real message to one real person today. Not a deep talk. Just contact. Then do it again tomorrow. That's the muscle.";
-    } else {
-      move="It's doing two jobs, company and escape, so you'll replace it on two fronts: one small piece of real human contact today (a single text to one person), and one real outlet for your head this week. Start with whichever feels more survivable.";
-    }
-    if(score>6){
-      move += " And if part of this is that real dating feels out of reach, your age or your looks, that floor is real and we won't pretend otherwise. It's also not the whole game. The things that actually move a room, being settled, being present, are the ones the app can't build for you.";
-    }
-    $("movetext").textContent = move;
+    // First move is now static, type-agnostic bullet options (see #rb-move markup).
     $("bridge").textContent = "You got off the substitute. Now you learn the thing it was standing in for.";
 
-    // band-aware capture copy
-    if(bclass==="light"){
-      $("capture-h3").textContent = "The 7-Day Unplug";
-      $("capture-lead").textContent = "One short email a day. The pull gets stronger quietly, and the early habit is the easiest one to redirect. Seven days now is cheap insurance while it's still just a tool.";
-    } else {
-      // mid and heavy: existing copy unchanged
-      $("capture-h3").textContent = "The 7-Day Unplug";
-      $("capture-lead").textContent = "One short email a day. Not a lecture, not a guilt trip. Just the first real steps off it, and toward people. Free.";
-    }
+    // capture copy (simple, all bands)
+    $("capture-h3").textContent = "The 7-Day Unplug";
+    $("capture-lead").textContent = "One short email a day. Free.";
 
     // --- staged reveal ---
     // Reset any previous run state
